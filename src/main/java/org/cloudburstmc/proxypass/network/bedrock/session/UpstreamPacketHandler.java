@@ -10,6 +10,7 @@ import org.cloudburstmc.protocol.bedrock.util.ChainValidationResult;
 import org.cloudburstmc.protocol.bedrock.util.EncryptionUtils;
 import org.cloudburstmc.protocol.bedrock.util.JsonUtils;
 import org.cloudburstmc.protocol.common.PacketSignal;
+import org.cloudburstmc.proxypass.CustomCodec;
 import org.cloudburstmc.proxypass.ProxyPass;
 import org.cloudburstmc.proxypass.network.bedrock.util.ForgeryUtils;
 import org.jose4j.json.JsonUtil;
@@ -57,7 +58,7 @@ public class UpstreamPacketHandler implements BedrockPacketHandler {
             session.sendPacketImmediately(status);
             return PacketSignal.HANDLED;
         }
-        session.setCodec(ProxyPass.CODEC);
+        session.setCodec(CustomCodec.CODEC);
 
         NetworkSettingsPacket networkSettingsPacket = new NetworkSettingsPacket();
         networkSettingsPacket.setCompressionThreshold(0);
@@ -107,7 +108,7 @@ public class UpstreamPacketHandler implements BedrockPacketHandler {
     private void initializeProxySession() {
         log.debug("Initializing proxy session");
         this.proxy.newClient(this.proxy.getTargetAddress(), downstream -> {
-            downstream.setCodec(ProxyPass.CODEC);
+            downstream.setCodec(CustomCodec.CODEC);
             downstream.setSendSession(this.session);
             this.session.setSendSession(downstream);
 
